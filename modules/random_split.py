@@ -2,12 +2,13 @@ import streamlit as st
 from utils import split_utils, files_utils
 from streamlit_vertical_slider import vertical_slider
 import random
-import os
+import pandas as pd
+
 
 def app():
 
-    data = st.session_state["data"]
-    meta = st.session_state["meta"]
+    data = st.session_state.get("data", pd.DataFrame())
+    meta = st.session_state.get("meta", {})
     with_baseline = True
 
     total_size = len(data)
@@ -29,6 +30,7 @@ def app():
                 min_value=0,
                 max_value=100,
                 step=1,
+                key="random split"
             )
 
         train_size = int((train_size_percentage / 100) * total_size)
@@ -51,6 +53,9 @@ def app():
 
     with col_preview:
         st.write("### Preview:")
+        st.write("")
+        st.write("")
+
         st.dataframe(data)
 
     if st.button("Split Data"):

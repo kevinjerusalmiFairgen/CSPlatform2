@@ -25,25 +25,21 @@ def load_file(file_path):
     try:
         if file_name.endswith(".csv"):
             df = pd.read_csv(file_path)
-            metadata["file_type"] = "csv"
 
         elif file_name.endswith(".xlsx"):
             df = pd.read_excel(file_path, sheet_name=None)
-            metadata["file_type"] = "xlsx"
-            metadata["sheets"] = list(df.keys())
 
             if len(df) == 1:
                 df = list(df.values())[0]
 
         elif file_name.endswith(".sav"):
             df, meta = pyreadstat.read_sav(file_path)
-            metadata["file_type"] = "sav"
-            metadata["variable_labels"] = meta.column_labels
+            print(meta)
 
         else:
             return None, {"error": "Unsupported file type"}
 
-        return df, metadata
+        return df, meta
 
     except Exception as e:
         return
@@ -63,8 +59,7 @@ def save_file(df, file_path, metadata=None):
                 df.to_excel(writer, sheet_name="Sheet1", index=False)
 
         elif file_type == ".sav":
-            var_labels = metadata.get("variable_labels") if metadata else None
-            pyreadstat.write_sav(df, file_path, column_labels=var_labels)
+            pyreadstat.write_sav(df, file_path, metadata=metadata)
         else:
             print("error")
             return {"error": "Unsupported file type"}
@@ -93,3 +88,7 @@ def empty_folder(folder_path):
         print(f"Folder '{folder_path}' emptied successfully.")
     else:
         print("Invalid folder path or folder does not exist.")
+
+
+def get_label(metadata, column, value):
+    return metadata.variable_value_labels.get(column, {}).get(value, None) 

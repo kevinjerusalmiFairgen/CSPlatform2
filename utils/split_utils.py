@@ -24,3 +24,21 @@ def random_split(df: pd.DataFrame, train_size: float = 0.1, baseline: bool = Tru
     return train_df, holdout_df, baseline_df
     
 
+def filter_dataframe(data: pd.DataFrame, filters: list):
+    """
+    Filters a DataFrame based on a list of column-value mappings from JSON.
+    """
+    if not filters:
+        return data, pd.DataFrame()  
+    filtered_df = data.copy()
+    
+    for filter_dict in filters:
+        for column, values in filter_dict.items():
+
+            if column in filtered_df.columns:
+                filtered_df = filtered_df[filtered_df[column].isin(values)]
+    
+    remaining_df = data.drop(filtered_df.index)
+
+    return filtered_df, remaining_df
+
