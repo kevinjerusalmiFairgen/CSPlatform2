@@ -59,7 +59,11 @@ def save_file(df, file_path, metadata=None):
                 df.to_excel(writer, sheet_name="Sheet1", index=False)
 
         elif file_type == ".sav":
-            pyreadstat.write_sav(df, file_path, metadata=metadata)
+                    pyreadstat.write_sav(
+                        df, file_path, 
+                        column_labels=metadata.column_labels,
+                        variable_value_labels=metadata.variable_value_labels,
+                        missing_ranges=metadata.missing_ranges)
         else:
             print("error")
             return {"error": "Unsupported file type"}
@@ -67,6 +71,7 @@ def save_file(df, file_path, metadata=None):
         print(f"✅ File saved successfully at {file_path}")
 
     except Exception as e:
+        print(e)
         return {"error": str(e)}
 
 

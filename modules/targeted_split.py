@@ -24,7 +24,7 @@ def app():
                 del st.session_state[key]  
 
     # === 🟢 Dataset Summary & Split (SIDE BY SIDE) ===
-    dataset_summary, dataset_summary_aftersplit = st.columns([1, 1]) 
+    dataset_summary, dataset_summary_aftersplit, plot = st.columns([1, 1, 1]) 
 
     # 🟡 Reset and Update Filters
     current_filters = {}
@@ -39,6 +39,8 @@ def app():
                 data.columns,
                 key=f"column_{idx}"
             )
+        st.button("➕ Add Another Column", on_click=add_column)
+
 
     with value_selection:
         st.write("### Value Selection")
@@ -68,6 +70,8 @@ def app():
 
                 if selected_values:
                     current_filters[selected_column] = selected_values
+        st.button("❌ Clear All Filters", on_click=clear_selections)
+
 
         with dataset_split:
             st.write("### Split")
@@ -88,22 +92,24 @@ def app():
 
     segment_training_size = round(filtered_df.shape[0] * train_size_percentage / 100)
     total_training_size = segment_training_size + remaining_df.shape[0]
-    holdout_size = data.shape[0] - total_training_size
+    holdout_size = filtered_df.shape[0] - segment_training_size
 
     # ✅ Update Dataset Summary After Filters & Split
     with dataset_summary:
         st.write("### Dataset Summary")
         st.write(f"**Original Dataset Size:** {data.shape[0]}")
-        st.write(f"**Segment Size:** {filtered_df.shape[0]} rows ({round(filtered_df.shape[0]*100/data.shape[0])}%)")
+        st.write(f"**Segment Size:** {filtered_df.shape[0]} rows ({round(filtered_df.shape[0]*100/data.shape[0], 2)}%)")
     with dataset_summary_aftersplit:  
         st.write("###")  
-        st.write(f"**Segment Training Size:** {segment_training_size} rows ({round(segment_training_size/data.shape[0]*100)}%)")
-        st.write(f"**Total Training Size:** {total_training_size} rows ({round(total_training_size/data.shape[0]*100)}%)")
-        st.write(f"**Holdout Size:** {holdout_size} rows ({round(holdout_size/data.shape[0]*100)}%)")
+        st.write(f"**Segment Training Size:** {segment_training_size} rows ({round(segment_training_size/data.shape[0]*100, 2)}%)")
+        st.write(f"**Total Training Size:** {total_training_size} rows ({round(total_training_size/data.shape[0]*100, 2)}%)")
+        st.write(f"**Holdout Size:** {holdout_size} rows ({round(holdout_size/data.shape[0]*100, 2)}%)")
+    with plot:
+        split_utils.plot_training_holdout(
+            total_training_size=total_training_size, 
+            holdout_size=holdout_size, 
+            segment_training_size=segment_training_size
+        )
 
-    # === ⚫ Buttons (Bottom) ===
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        st.button("➕ Add Another Column", on_click=add_column)
-    with col2:
-        st.button("❌ Clear All Filters", on_click=clear_selections)
+
+
