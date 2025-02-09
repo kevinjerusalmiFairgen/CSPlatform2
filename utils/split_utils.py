@@ -119,7 +119,6 @@ def targeted_split(df: pd.DataFrame, filters: list, train_size: float = 0.1, bas
     
     for seed in random_states:
         if not baseline:
-            print("NO BASELINE")
             # No baseline, just a train-test split
             if len(segment_df) == 0:
                 train_df, holdout_df = rest_df, pd.DataFrame()

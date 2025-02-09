@@ -10,9 +10,8 @@ def app():
     data = st.session_state.get("data", pd.DataFrame())
     meta = st.session_state.get("meta", {})
 
-    # Ensure session state variables exist
     if "selections" not in st.session_state:
-        st.session_state.selections = []  # Change to list instead of [{}]
+        st.session_state.selections = []  
 
     if "user_choices" not in st.session_state:
         st.session_state.user_choices = []
@@ -33,7 +32,7 @@ def app():
         """Adds a new column selection box dynamically"""
         available_columns = [col for col in data.columns if col not in {s["column"] for s in st.session_state.selections}]
         if available_columns:
-            st.session_state.selections.append({"column": "", "values": []})  # Add default structure
+            st.session_state.selections.append({"column": "", "values": []})  # Default structure
 
     def clear_selections():
         """Clears all selections and filters"""
@@ -112,20 +111,28 @@ def app():
         st.write("### ")
 
         # Update session state directly
-        st.session_state["with_baseline"] = st.toggle(
-            "Baseline", value=st.session_state["with_baseline"], key="with_baseline_targeted"
-        )
+        if st.toggle("Baseline", value=st.session_state["with_baseline"], key="with_baseline_targeted"):
+            if not st.session_state["with_baseline"]:  
+                st.session_state["with_baseline"] = True
+                st.rerun()
+        else:
+            if st.session_state["with_baseline"]:
+                st.session_state["with_baseline"] = False
+                st.rerun()
 
-        # Ensure remove_baseline_from_holdout updates correctly
-        if not st.session_state["with_baseline"]:
-            st.session_state["remove_baseline"] = False  
-        else: 
-            st.session_state["remove_baseline"] = st.toggle(
-                "Remove Baseline from Holdout",
-                value=st.session_state["remove_baseline"],
-                key="remove_baseline_targeted",
-                disabled=not st.session_state["with_baseline"]
-            )
+
+        if st.toggle("Remove Baseline from Holdout", 
+                    value=st.session_state["remove_baseline"], 
+                    key="remove_baseline_targeted", 
+                    disabled=not st.session_state["with_baseline"]):
+            if not st.session_state["remove_baseline"]:
+                st.session_state["remove_baseline"] = True
+                st.rerun()
+        else:
+            if st.session_state["remove_baseline"]:
+                st.session_state["remove_baseline"] = False
+                st.rerun()
+
 
         # Bootstrap setting
         new_boostrap_state = st.toggle(
@@ -232,6 +239,6 @@ def app():
                 files_utils.save_file(df=holdout_df, metadata=meta, file_path=f"outputs/holdout_{holdout_size}{suffix}" + st.session_state["file_type"])
 
                 if st.session_state["with_baseline"]:
-                    files_utils.save_file(df=baseline_df, metadata=meta, file_path=f"outputs/baseline_{total_training_size*2}{suffix}" + st.session_state["file_type"])
+                    files_utils.save_file(df=baseline_df, metadata=meta, file_path=f"outputs/baseline_{baseline_size}{suffix}" + st.session_state["file_type"])
 
             st.success("Data has been successfully split!")
