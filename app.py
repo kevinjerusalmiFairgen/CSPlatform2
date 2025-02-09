@@ -29,7 +29,7 @@ if uploaded_file:
         st.sidebar.error(f"❌ Error loading file: {str(e)}")
 
 else:
-    st.sidebar.info("📂 Upload a CSV, XLSX, or SAV file to begin.")
+    st.sidebar.info("📂 Upload a file to begin.")
 
 # Title
 st.title("Customer Success Platform 🚀")
