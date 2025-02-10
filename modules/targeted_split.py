@@ -233,10 +233,10 @@ def app():
             for idx, (train_df, holdout_df, baseline_df) in enumerate(split_results):
                 suffix = f"_batch_{idx+1}" if st.session_state["boostrap"] else ""
 
-                files_utils.save_file(df=train_df, metadata=meta, file_path=f"outputs/train_{total_training_size}{suffix}" + st.session_state["file_type"])
-                files_utils.save_file(df=holdout_df, metadata=meta, file_path=f"outputs/holdout_{holdout_size}{suffix}" + st.session_state["file_type"])
+                files_utils.save_file(df=train_df, metadata=meta, file_path=f"outputs/train_{total_training_size}{suffix}" + "." + st.session_state["file_type"])
+                files_utils.save_file(df=holdout_df, metadata=meta, file_path=f"outputs/holdout_{holdout_size}{suffix}" + "." + st.session_state["file_type"])
 
                 if st.session_state["with_baseline"]:
-                    files_utils.save_file(df=baseline_df, metadata=meta, file_path=f"outputs/baseline_{baseline_size}{suffix}" + st.session_state["file_type"])
+                    files_utils.save_file(df=baseline_df, metadata=meta, file_path=f"outputs/baseline_{baseline_size}{suffix}" + "." + st.session_state["file_type"])
 
             st.success("Data has been successfully split!")

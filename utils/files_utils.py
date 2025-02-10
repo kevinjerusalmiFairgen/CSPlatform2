@@ -60,7 +60,7 @@ def save_file(df, file_path, metadata=None):
             df.to_csv(file_path, index=False)
 
         elif file_type == "xlsx":
-            df.to_excel(file_path, index=False)
+            df.to_excel(file_path, index=False, engine="xlsxwriter")
 
         elif file_type == "sav":
                     pyreadstat.write_sav(
