@@ -203,8 +203,6 @@ def app():
                 baseline_percentage = round(baseline_size * 100 / data.shape[0], 2)
                 tile.metric(label="Baseline Size", value=f"{baseline_size}", delta=f"{baseline_percentage}%")
 
-    print(json.dumps(st.session_state.selections, indent=4))  # Also print to terminal for debugging
-
     with plot:
         split_utils.plot_training_holdout(
             total_training_size=total_training_size, 

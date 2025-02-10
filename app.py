@@ -21,7 +21,7 @@ if uploaded_file:
             st.session_state["data"] = data
             st.session_state["meta"] = meta
             st.session_state["file_path"] = file_path
-            file_type = st.session_state["file_type"] = file_path[-4:]
+            file_type = st.session_state["file_type"] = file_path.split(".")[1]
             st.sidebar.success(f"✅ {file_type.upper()} file successfully loaded!")
         else:
             st.sidebar.error(f"❌ Error Uploading")

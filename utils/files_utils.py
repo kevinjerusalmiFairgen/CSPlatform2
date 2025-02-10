@@ -20,13 +20,16 @@ def save_uploaded_file(uploaded_file):
 def load_file(file_path):
     """Loads CSV, XLSX, or SAV files into a Pandas DataFrame."""
     file_name = file_path.lower()
-    metadata = {}
-
+    meta = None
     try:
         if file_name.endswith(".csv"):
+            print(file_path)
             df = pd.read_csv(file_path)
 
         elif file_name.endswith(".xlsx"):
+            print(file_path)
+            print(meta)
+
             df = pd.read_excel(file_path, sheet_name=None)
 
             if len(df) == 1:
@@ -34,7 +37,6 @@ def load_file(file_path):
 
         elif file_name.endswith(".sav"):
             df, meta = pyreadstat.read_sav(file_path)
-            print(meta)
 
         else:
             return None, {"error": "Unsupported file type"}
@@ -42,23 +44,25 @@ def load_file(file_path):
         return df, meta
 
     except Exception as e:
+        print(e)
         return
 
 
 def save_file(df, file_path, metadata=None):
     """
     Saves a DataFrame to CSV, XLSX, or SAV format.
-    """    
-    file_type = file_path[-4:]
+    """
+    print(file_path)    
+    file_type = file_path.split(".")[1]  
+
     try:
-        if file_type == ".csv":
+        if file_type == "csv":
             df.to_csv(file_path, index=False)
 
-        elif file_type == ".xlsx":
-            with pd.ExcelWriter(file_path, engine="xlsxwriter") as writer:
-                df.to_excel(writer, sheet_name="Sheet1", index=False)
+        elif file_type == "xlsx":
+            df.to_excel(file_path, index=False)
 
-        elif file_type == ".sav":
+        elif file_type == "sav":
                     pyreadstat.write_sav(
                         df, file_path, 
                         column_labels=metadata.column_labels,
