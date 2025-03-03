@@ -1,6 +1,6 @@
 import streamlit as st
 import utils.files_utils as files_utils
-from modules import random_split, targeted_split
+from modules import random_split, targeted_split, validation
 
 
 st.set_page_config(page_title="Customer Success Platform", layout="wide")
@@ -36,7 +36,7 @@ else:
 st.title("Customer Success Platform 🚀")
 
 # Create Tabs
-tab_random, tab_targeted = st.tabs(["Random Split", "Targeted Split"])
+tab_random, tab_targeted, tab_validation = st.tabs(["Random Split", "Targeted Split", "Validation"])
 
 # Tab Content
 with tab_random:
@@ -48,5 +48,11 @@ with tab_random:
 with tab_targeted:
     if "data" in st.session_state:
         targeted_split.app()
+    else:
+        st.warning("⚠️ Please upload a dataset.")
+
+with tab_validation:
+    if "data" in st.session_state:
+        validation.app()
     else:
         st.warning("⚠️ Please upload a dataset.")
