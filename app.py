@@ -3,7 +3,7 @@ import utils.files_utils as files_utils
 from modules import random_split, targeted_split, validation
 
 
-st.set_page_config(page_title="Customer Success Platform", layout="wide")
+st.set_page_config(page_title="Data Splitting Tool", layout="wide")
 
 st.sidebar.title("Global Controls")
 
@@ -45,14 +45,14 @@ with tab_random:
     else:
         st.warning("⚠️ Please upload a dataset.")
 
-with tab_targeted:
-    if "data" in st.session_state:
-        targeted_split.app()
-    else:
-        st.warning("⚠️ Please upload a dataset.")
+# with tab_targeted:
+#     if "data" in st.session_state:
+#         targeted_split.app()
+#     else:
+#         st.warning("⚠️ Please upload a dataset.")
 
-with tab_validation:
-    if "data" in st.session_state:
-        validation.app()
-    else:
-        st.warning("⚠️ Please upload a dataset.")
+# with tab_validation:
+#     if "data" in st.session_state:
+#         validation.app()
+#     else:
+#         st.warning("⚠️ Please upload a dataset.")
