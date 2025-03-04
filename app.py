@@ -1,6 +1,6 @@
 import streamlit as st
 import utils.files_utils as files_utils
-from modules import random_split#, targeted_split, validation
+from modules import random_split  #, targeted_split, validation
 
 
 st.set_page_config(page_title="Data Splitting Tool", layout="wide")
