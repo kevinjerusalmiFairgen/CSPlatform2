@@ -8,8 +8,8 @@ def app():
     data = st.session_state.get("data", pd.DataFrame())
     meta = st.session_state.get("meta", {})
 
-    if "remove_baseline_from_holdout" not in st.session_state:
-        st.session_state["remove_baseline_from_holdout"] = True
+    # if "remove_baseline_from_holdout" not in st.session_state:
+    #     st.session_state["remove_baseline_from_holdout"] = True
     # if "with_baseline" not in st.session_state:
     #     st.session_state["with_baseline"] = True
     if "boostrap" not in st.session_state:
