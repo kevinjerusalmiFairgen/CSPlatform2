@@ -59,14 +59,20 @@ def filter_dataframe(data: pd.DataFrame, filters: list):
     return filtered_df, remaining_df
 
 
-def plot_training_holdout(total_training_size, holdout_size, segment_training_size):
+def plot_training_holdout(total_training_size, holdout_size, segment_training_size=None):
     fig, ax = plt.subplots(figsize=(5, 6))
 
-    rest_training_size = total_training_size - segment_training_size
-    sizes = [segment_training_size, rest_training_size, holdout_size]
-    labels = ["Training Segment", "Training", "Holdout"]
-    colors = ["#f34b4c", "#f8b7ba", "#f0f2f6"]
-    # Fix the size of the pie chart explicitly
+    if segment_training_size is not None:
+        rest_training_size = total_training_size - segment_training_size
+        sizes = [segment_training_size, rest_training_size, holdout_size]
+        labels = ["Training Segment", "Training", "Holdout"]
+        colors = ["#f34b4c", "#f8b7ba", "#f0f2f6"]
+    else:
+        sizes = [total_training_size, holdout_size]
+        labels = ["Training", "Holdout"]
+        colors = ["#f34b4c", "#f0f2f6"]
+
+    # Create the pie chart with fixed pie size
     wedges, texts, autotexts = ax.pie(
         sizes, labels=labels, colors=colors, startangle=140, 
         wedgeprops={'edgecolor': 'white'}, autopct='%1.1f%%',
@@ -78,7 +84,8 @@ def plot_training_holdout(total_training_size, holdout_size, segment_training_si
     for text in texts:
         text.set_color("black")
 
-    ax.add_artist(plt.Circle((0, 0), 0.4, fc='white'))  # Fix the inner circle size
+    # Add a central white circle to achieve a donut-like appearance
+    ax.add_artist(plt.Circle((0, 0), 0.4, fc='white'))
 
     # Ensure the aspect ratio is equal to prevent distortion
     ax.set_aspect('equal')
@@ -86,12 +93,9 @@ def plot_training_holdout(total_training_size, holdout_size, segment_training_si
     # Move the plot higher to reduce space between title and chart
     ax.set_position([0.1, 0.35, 0.8, 0.2])  # [left, bottom, width, height]
 
-    # Set the title
-    #ax.set_title("Training vs Holdout", fontsize=14, fontweight='bold', color="black", pad=-5)
-
-    # Move legend below the chart and fix layout
+    # Move legend below the chart and fix layout; adjust number of columns to number of labels
     fig.legend(
-        wedges, labels, loc="lower center", ncol=3, fontsize=12, frameon=False,
+        wedges, labels, loc="lower center", ncol=len(labels), fontsize=12, frameon=False,
         bbox_to_anchor=(0.5, 0.1)  # Moves legend closer to the chart
     )
 

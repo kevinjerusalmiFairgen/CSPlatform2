@@ -1,9 +1,9 @@
 import streamlit as st
 import utils.files_utils as files_utils
-from modules import random_split, targeted_split, validation
+from modules import random_split
 
 
-st.set_page_config(page_title="Customer Success Platform", layout="wide")
+st.set_page_config(page_title="Data Splitting Tool", layout="wide")
 
 st.sidebar.title("Global Controls")
 
@@ -33,26 +33,10 @@ else:
     st.sidebar.info("📂 Upload a file to begin.")
 
 # Title
-st.title("Customer Success Platform 🚀")
+st.title("Data Splitting Tool 🚀")
 
-# Create Tabs
-tab_random, tab_targeted, tab_validation = st.tabs(["Random Split", "Targeted Split", "Validation"])
 
-# Tab Content
-with tab_random:
-    if "data" in st.session_state:
-        random_split.app()
-    else:
-        st.warning("⚠️ Please upload a dataset.")
-
-with tab_targeted:
-    if "data" in st.session_state:
-        targeted_split.app()
-    else:
-        st.warning("⚠️ Please upload a dataset.")
-
-with tab_validation:
-    if "data" in st.session_state:
-        validation.app()
-    else:
-        st.warning("⚠️ Please upload a dataset.")
+if "data" in st.session_state:
+    random_split.app()
+else:
+    st.warning("⚠️ Please upload a dataset.")
