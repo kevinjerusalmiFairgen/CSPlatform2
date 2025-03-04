@@ -15,7 +15,7 @@ def app():
 
     total_size = len(data)
 
-    col_shape, col_preview = st.columns([3, 7]) 
+    col_shape, col_preview = st.columns([5, 4]) 
 
     with col_shape:
         st.write("### Shape:")
@@ -38,13 +38,17 @@ def app():
         train_size = int((train_size_percentage / 100) * total_size)
         holdout_size = total_size - train_size 
         holdout_size_percentage = 100 - train_size_percentage * 2 
+
+        # Added warning if training data is not between 10% (1/10) and 20% (1/5) of the data
+        if not (10 <= train_size_percentage <= 20):
+            st.warning("Warning: The training data percentage should be between 10% (1/10) and 20% (1/5) of the total data.")
+
         with col_stats:
             st.metric(label="Total Size", value=f"{total_size} rows")
             st.metric(label=f"Train Size ({train_size_percentage}%)", value=f"{train_size} rows")
             st.metric(label=f"Holdout Size ({holdout_size_percentage}%)", value=f"{holdout_size} rows")
 
-        new_boostrap_state = st.toggle("Boostrap", value=st.session_state["boostrap"], help="Toggle this option to enable or disable bootstrap styling")
-)
+        new_boostrap_state = st.toggle("Boostrap", value=st.session_state["boostrap"], help="Repeated data splitting with replacement")
         if new_boostrap_state != st.session_state["boostrap"]:
             st.session_state["boostrap"] = new_boostrap_state
             st.rerun()
@@ -56,9 +60,10 @@ def app():
 
     with col_preview:
         st.write("### Preview:")
-        st.write("")
-        st.write("")
-        st.dataframe(data)
+        split_utils.plot_training_holdout(train_size, holdout_size)
+        # st.write("")
+        # st.dataframe(data)
+
 
     if st.button("Split Data"):
         files_utils.empty_folder("outputs")
@@ -83,4 +88,3 @@ def app():
             files_utils.save_file(df=holdout_df, metadata=meta, file_path=f"outputs/holdout_{holdout_size}{suffix}" + "." + st.session_state["file_type"])
 
         st.success("Data has been successfully split!")
-
