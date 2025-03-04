@@ -69,8 +69,8 @@ def app():
         split_results = split_utils.random_split(
             st.session_state["data"], 
             train_size=train_size_percentage / 100, 
-            baseline=False 
-            remove_baseline=False  
+            baseline=False,
+            remove_baseline=False,
             random_states=random_states
         )
 
