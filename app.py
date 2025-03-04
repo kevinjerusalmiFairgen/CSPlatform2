@@ -33,17 +33,17 @@ else:
     st.sidebar.info("📂 Upload a file to begin.")
 
 # Title
-st.title("Customer Success Platform 🚀")
+st.title("Data Splitting Tool 🚀")
 
 # Create Tabs
-tab_random, tab_targeted, tab_validation = st.tabs(["Random Split", "Targeted Split", "Validation"])
+#tab_random, tab_targeted, tab_validation = st.tabs(["Random Split", "Targeted Split", "Validation"])
 
 # Tab Content
-with tab_random:
-    if "data" in st.session_state:
-        random_split.app()
-    else:
-        st.warning("⚠️ Please upload a dataset.")
+#with tab_random:
+if "data" in st.session_state:
+    random_split.app()
+else:
+    st.warning("⚠️ Please upload a dataset.")
 
 # with tab_targeted:
 #     if "data" in st.session_state:
