@@ -43,7 +43,8 @@ def app():
             st.metric(label=f"Train Size ({train_size_percentage}%)", value=f"{train_size} rows")
             st.metric(label=f"Holdout Size ({holdout_size_percentage}%)", value=f"{holdout_size} rows")
 
-        new_boostrap_state = st.toggle("Boostrap", value=st.session_state["boostrap"])
+        new_boostrap_state = st.toggle("Boostrap", value=st.session_state["boostrap"], help="Toggle this option to enable or disable bootstrap styling")
+)
         if new_boostrap_state != st.session_state["boostrap"]:
             st.session_state["boostrap"] = new_boostrap_state
             st.rerun()
