@@ -60,8 +60,10 @@ def filter_dataframe(data: pd.DataFrame, filters: list):
 
 
 def plot_training_holdout(total_training_size, holdout_size, segment_training_size=None):
+    # Create figure and axes
     fig, ax = plt.subplots(figsize=(5, 6))
 
+    # Prepare data, labels, and colors
     if segment_training_size is not None:
         rest_training_size = total_training_size - segment_training_size
         sizes = [segment_training_size, rest_training_size, holdout_size]
@@ -72,35 +74,50 @@ def plot_training_holdout(total_training_size, holdout_size, segment_training_si
         labels = ["Training", "Holdout"]
         colors = ["#f34b4c", "#f0f2f6"]
 
-    # Create the pie chart with fixed pie size
+    # Draw the donut, shifting it upward by setting the center to (0, 0.2)
     wedges, texts, autotexts = ax.pie(
-        sizes, labels=labels, colors=colors, startangle=140, 
-        wedgeprops={'edgecolor': 'white'}, autopct='%1.1f%%',
-        textprops={'fontsize': 12, 'color': 'black'},  
-        radius=0.8,  
-        pctdistance=0.70  # Move percentages inside the slices
+        sizes,
+        labels=labels,
+        colors=colors,
+        startangle=140,
+        wedgeprops={'edgecolor': 'white'},
+        autopct='%1.1f%%',
+        textprops={'fontsize': 12, 'color': 'black'},
+        radius=0.8,
+        pctdistance=0.70,
+        center=(0, 0.2)
     )
 
+    # Ensure text is black
     for text in texts:
         text.set_color("black")
 
-    # Add a central white circle to achieve a donut-like appearance
-    ax.add_artist(plt.Circle((0, 0), 0.4, fc='white'))
+    # Add the white center circle to complete the donut look
+    center_circle = plt.Circle((0, 0.2), 0.4, fc='white')
+    ax.add_artist(center_circle)
 
-    # Ensure the aspect ratio is equal to prevent distortion
+    # Set equal aspect ratio and remove axes visuals
     ax.set_aspect('equal')
+    ax.axis('off')
 
-    # Move the plot higher to reduce space between title and chart
-    ax.set_position([0.1, 0.35, 0.8, 0.2])  # [left, bottom, width, height]
+    # Remove extra margins around the figure
+    fig.subplots_adjust(top=1, bottom=0, left=0, right=1)
+    
+    # Adjust the y-axis limits to remove top padding:
+    ax.set_ylim(-0.6, 1.0)
 
-    # Move legend below the chart and fix layout; adjust number of columns to number of labels
+    # Optional: Move legend to the bottom
     fig.legend(
-        wedges, labels, loc="lower center", ncol=len(labels), fontsize=12, frameon=False,
-        bbox_to_anchor=(0.5, 0.1)  # Moves legend closer to the chart
+        wedges, labels,
+        loc="lower center",
+        ncol=len(labels),
+        fontsize=12,
+        frameon=False,
+        bbox_to_anchor=(0.5, 0.05)
     )
+    
+    st.pyplot(fig, clear_figure=True, use_container_width=True)
 
-    fig.tight_layout() 
-    st.pyplot(fig, clear_figure=True)
 
 
 def targeted_split(df: pd.DataFrame, filters: list, train_size: float = 0.1, baseline: bool = True, remove_baseline: bool = True, random_states=None):
